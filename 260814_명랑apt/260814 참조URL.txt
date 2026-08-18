@@ -1,0 +1,13 @@
+K-apt 공동주택관리정보시스템	https://www.k-apt.go.kr
+서울 열린데이터 광장			https://data.seoul.go.kr
+서울 공동주택통합정보마당		https://openapt.seoul.go.kr
+연도별 행정동 경계			https://admdongkor.vw-lab.com
+
+
+관리비 알리미				https://gwanribi.kr
+2026 서울시 빅데이터 활용 경진대회 분석부분 대상	https://bigdata.seoul.go.kr/noti/selectNoti.do?r_id=P260&bbs_seq=846&ac_type=A1&sch_type=&sch_text=&currentPage=1
+ARIMA 참조					https://otexts.com/fppkr/seasonal-arima.html
+Tableau 시각화 참조			https://public.tableau.com/app/discover
+OECD 시각화 참조			https://www.oecd.org/en/data/tools/well-being-data-monitor/better-life-index.html
+Gartner 시각화 참조			https://www.gartner.com
+시각화 참조				https://www.youtube.com/watch?v=jbkSRLYSojo
