@@ -1,0 +1,31 @@
+[K-apt API 무료]
+
+https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=K-apt+API&ackey=smherrt5
+
+
+
+공동주택 기본정보 API
+공동주택관리정보시스템에 가입한 단지의 법정동주소, 분양형태, 난방방식, 연면적, 동수, 세대수 등 기본정보와 관리방식, 경비/청소/소독 등 운영정보를 제공하는 서비스로 확인됩니다.
+
+공공데이터포털
+Base URL: apis.data.go.kr/1613000/AptBasisInfoServiceV4
+
+공공데이터포털
+주요 엔드포인트: /getAphusBassInfoV4(기본정보), /getAphusDtlInfoV4(상세정보) 
+
+공공데이터포털
+공동주택 관리비 API
+300세대 이상 의무적 관리대상 단지의 공용관리비를 투명하게 제공하는 서비스로, 단지별 경비비, 청소비, 승강기 유지비 등 여러 항목을 조회할 수 있습니다.
+
+K-apt 공동주택관리정보시스템
+Base URL: apis.data.go.kr/1613000/AptCmnuseManageCostServiceV2
+
+K-apt 공동주택관리정보시스템
+주요 엔드포인트 예: /getHsmpGuardCostInfoV2(경비비), /getHsmpCleaningCostInfoV2(청소비), /getHsmpElevatorMntncCostInfoV2(승강기 유지비) 등
+
+K-apt 공동주택관리정보시스템
+
+활용 전 확인사항
+키워드에 K-APT가 포함되어 있으나, 검색 결과에서는 K-APT가 단지명/서비스명으로 함께 언급되는 경우가 있어 단지명으로 검색 시 혼동이 있을 수 있습니다.
+
+공공데이터포털에서 제공되는 API는 트래픽(개발계정 10,000) 및 업데이트 주기(실시간) 등이 안내되어 있으니, 서비스 운영 전 신청 및 문서 확인이 필요합니다.
