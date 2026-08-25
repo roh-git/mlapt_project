@@ -23,8 +23,37 @@ def load_data():
             dfs[name] = pd.read_csv(path, encoding='utf-8')
         except UnicodeDecodeError:
             dfs[name] = pd.read_csv(path, encoding='cp949')
-        print(f"[{name}] 데이터 로드 완료: {dfs[name].shape}")
+        print(f"[{name}] 데이터 로드 완료 (원본): {dfs[name].shape}")
         
+    return dfs
+
+def drop_unnecessary_columns(dfs):
+    """사용자 요청에 따라 불필요한 칼럼을 삭제합니다."""
+    cols_to_drop = {
+        '관리비': [
+            '차량유지비', '지능형네트워크유지비', '재해예방비', '가스사용료(공용)', '가스사용료(전용)', 
+            '기타', '제세공과금', '교육훈련비', '시설유지비', '안전점검비', '위탁관리수수료', 
+            '급탕비(공용)', '수도료(공용)', 'TV수신료', '정화조오물수수료', '선관위운영비'
+        ],
+        '기본정보': ['시공사', '주택관리업자'],
+        '시설정보': [
+            '건물구조', '전기-수전용량', '전기-세대전기계약방식', '승강기관리-관리방식', 
+            'CCTV대수', '부대복리시설', '홈네트워크'
+        ],
+        '운영정보': [
+            '경비관리-계약업체', '청소관리-계약업체', '음식물 처리방법', '소독관리-계약업체', 
+            '일반관리-관리방식', '경비관리-관리방식', '청소관리-관리방식', '소독관리-관리방식'
+        ],
+        '장기수선': ['입주자기여수익', '공동기여수익']
+    }
+    
+    print("\n[진행] 불필요한 칼럼 삭제 시작...")
+    for table_name, columns in cols_to_drop.items():
+        if table_name in dfs:
+            # errors='ignore'를 사용하여 이미 없는 칼럼이 있어도 안전하게 넘어갑니다
+            dfs[table_name] = dfs[table_name].drop(columns=columns, errors='ignore')
+            print(f"[{table_name}] 지정된 칼럼 삭제 완료 -> 남은 컬럼 수: {dfs[table_name].shape[1]}")
+            
     return dfs
 
 def merge_data(dfs):
@@ -74,19 +103,15 @@ def main():
     print("=== 데이터 분석 파이프라인 시작 ===")
     
     dfs = load_data()
+    dfs = drop_unnecessary_columns(dfs)
     final_df = merge_data(dfs)
     
     print("\n=== Data Preview (최상위 5행) ===")
     # 콘솔 출력 시 인코딩 안깨지게 텍스트 변환
     print(final_df.head().to_string(index=False))
     
-    print("\n=== 컬럼 리스트 및 결측치 요약 ===")
-    info_df = pd.DataFrame({
-        'Dtype': final_df.dtypes,
-        'Non-Null Count': final_df.notnull().sum(),
-        'Null Count': final_df.isnull().sum()
-    })
-    print(info_df.to_string())
+    print("\n=== 남은 최종 컬럼 리스트 ===")
+    print(list(final_df.columns))
     
     return final_df
 
