@@ -19,7 +19,6 @@ def load_data():
     dfs = {}
     for name, filename in files.items():
         path = os.path.join(DATA_DIR, filename)
-        # 인코딩 문제 방지를 위해 utf-8 시도 후 cp949 적용
         try:
             dfs[name] = pd.read_csv(path, encoding='utf-8')
         except UnicodeDecodeError:
@@ -30,6 +29,12 @@ def load_data():
 
 def merge_data(dfs):
     """불러온 DataFrame들을 하나의 Master DataFrame으로 병합합니다."""
+    
+    # [중요] 면적정보 테이블은 평형(세부면적)별로 여러 행이 존재하여 조인 시 데이터가 N배로 뻥튀기됨.
+    # 단지 레벨의 분석을 위해 '관리비부과면적', '주거전용면적(단지합계)'만 가져오도록 중복 제거.
+    if '면적정보' in dfs:
+        dfs['면적정보'] = dfs['면적정보'].drop_duplicates(subset=['단지코드']).drop(columns=['주거전용면적(세부)', '세대수'], errors='ignore')
+
     print("\n[진행] 정적 테이블(단지코드 기준) 병합 시작...")
     
     # 1. 정적(Static) 테이블 병합 (기본, 면적, 시설, 운영, 위치)
@@ -38,7 +43,7 @@ def merge_data(dfs):
     
     for table_name in static_tables:
         df_to_merge = dfs[table_name]
-        # 단지코드를 제외한 중복 칼럼(예: 동수, 세대수) 방지
+        # 단지코드를 제외한 중복 칼럼(예: 동수, 시도) 방지
         cols_to_use = [col for col in df_to_merge.columns if col not in static_df.columns or col == '단지코드']
         static_df = pd.merge(static_df, df_to_merge[cols_to_use], on='단지코드', how='left')
     
@@ -50,10 +55,8 @@ def merge_data(dfs):
     ts_df = dfs['관리비']
     repair_df = dfs['장기수선']
     
-    # 시계열 조인 키: 단지코드 + 발생년월
     join_keys = ['단지코드', '발생년월(YYYYMM)']
     
-    # 중복 칼럼 방지
     cols_to_use = [col for col in repair_df.columns if col not in ts_df.columns or col in join_keys]
     ts_df = pd.merge(ts_df, repair_df[cols_to_use], on=join_keys, how='left')
     
@@ -70,24 +73,22 @@ def merge_data(dfs):
 def main():
     print("=== 데이터 분석 파이프라인 시작 ===")
     
-    # 1. 데이터 로드
     dfs = load_data()
-    
-    # 2. 데이터 병합
     final_df = merge_data(dfs)
     
-    # 3. 결과 저장 (선택 사항)
-    # output_path = os.path.join(DATA_DIR, 'merged_master_data.csv')
-    # final_df.to_csv(output_path, index=False, encoding='utf-8-sig')
-    # print(f"\n최종 데이터셋 저장 완료: {output_path}")
+    print("\n=== Data Preview (최상위 5행) ===")
+    # 콘솔 출력 시 인코딩 안깨지게 텍스트 변환
+    print(final_df.head().to_string(index=False))
     
-    print("\n=== Data Preview ===")
-    print(final_df.head())
-    print("\n=== Columns List ===")
-    print(list(final_df.columns))
+    print("\n=== 컬럼 리스트 및 결측치 요약 ===")
+    info_df = pd.DataFrame({
+        'Dtype': final_df.dtypes,
+        'Non-Null Count': final_df.notnull().sum(),
+        'Null Count': final_df.isnull().sum()
+    })
+    print(info_df.to_string())
     
     return final_df
 
 if __name__ == "__main__":
     df = main()
-    # 이후 df를 활용하여 EDA 및 가설 검증, 모델링 코드를 이어나가면 됩니다.
