@@ -517,7 +517,7 @@ wheels = [
 [[package]]
 name = "dugong"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "anyio" },
     { name = "argon2-cffi" },
