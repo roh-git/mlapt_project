@@ -75,6 +75,7 @@ dependencies = [
     "pandocfilters==1.5.1",
     "parso==0.8.7",
     "platformdirs==4.11.4",
+    "plotly>=7.0.0",
     "prometheus-client==0.26.0",
     "prompt-toolkit==3.0.53",
     "psutil==7.2.2",
